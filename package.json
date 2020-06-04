@@ -1,13 +1,31 @@
 {
   "name": "angular-githooks",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "test:pre": "ng test --watch false --browsers ChromeHeadless --codeCoverage --progress true",
+    "pre:commit": "pretty-quick --staged && lint-staged",
+    "pre:push": "npm run test:pre && npm run build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre:commit",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run pre:push"
+    }
+  },
+  "lint-staged": {
+    "*.scss": [
+      "stylelint  --syntax=scss --fix"
+    ],
+    "*.ts": [
+      "tslint --fix -c --project tsconfig.json --config tslint.json"
+    ]
   },
   "private": true,
   "dependencies": {
@@ -28,10 +46,13 @@
     "@angular/cli": "~8.3.26",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
-    "@types/node": "~8.9.4",
+    "@commitlint/config-conventional": "^8.3.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
+    "commitlint": "^8.3.5",
+    "husky": "^4.2.5",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -39,6 +60,9 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "lint-staged": "^10.2.9",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
